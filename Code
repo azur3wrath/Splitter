@@ -1,0 +1,31 @@
+Sub SplitTextIntoRows()
+    Dim rng As Range
+    Dim cell As Range
+    Dim originalText As String
+    Dim newText As String
+    Dim i As Integer
+    Dim rowCounter As Integer
+    Dim startChar As Integer
+    
+    ' Define the range containing the text
+    Set rng = Range("A1:A100") ' Change this range as per your requirement
+    
+    ' Loop through each cell in the range
+    For Each cell In rng
+        originalText = cell.Value
+        newText = ""
+        rowCounter = 0
+        startChar = 1
+        
+        ' Split the text into rows of 35 characters each
+        Do While startChar <= Len(originalText)
+            rowCounter = rowCounter + 1
+            newText = Mid(originalText, startChar, 35)
+            cell.Offset(rowCounter - 1, 0).Value = newText
+            startChar = startChar + 35
+        Loop
+        
+        
+    Next cell
+End Sub
+
