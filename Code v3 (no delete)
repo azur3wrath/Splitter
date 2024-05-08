@@ -1,0 +1,21 @@
+Sub test()
+    Dim txt As String, var() As Variant
+    Dim i As Long, x As Long, y As Long, z As Long
+    Dim ws As Worksheet
+   
+    i = 35
+    Set ws = ThisWorkbook.Sheets("Sheet1")
+   
+    For z = ws.Range("A" & Rows.Count).End(xlUp).Row To 1 Step -1
+        txt = ws.Range("A" & z).Value
+        If Len(txt) > i Then
+            For x = 1 To Len(txt) Step i
+                ReDim Preserve var(y): var(y) = Mid(txt, x, i)
+                y = y + 1
+            Next x
+            ws.Rows(z + 1 & ":" & z + UBound(var)).Insert
+            ws.Range("A" & z).Resize(UBound(var) + 1, 1) = Application.Transpose(var)
+            Erase var: y = 0
+        End If
+    Next z
+End Sub
