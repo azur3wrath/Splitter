@@ -1,44 +1,22 @@
-Sub SplitTextIntoRows()
+Sub test()
+    Dim txt As String, var() As Variant
+    Dim i As Long, x As Long, y As Long, z As Long
     Dim ws As Worksheet
-    Dim cell As Range
-    Dim originalText As String
-    Dim newText As String
-    Dim rowNum As Long
-    Dim colNum As Long
     
-    ' Set the worksheet
-    Set ws = ThisWorkbook.Sheets("Sheet1") ' Change "Sheet1" to your sheet name
+    i = 35
+    Set ws = ThisWorkbook.Sheets("Sheet1")
     
-    ' Loop through each cell in column A
-    For Each cell In ws.Range("A1:A" & ws.Cells(ws.Rows.Count, "A").End(xlUp).Row)
-        originalText = cell.Value
-        rowNum = cell.Row
-        colNum = cell.Column
-        
-        ' Clear the cell before adding new values
-        cell.ClearContents
-        
-        ' Split the text into rows of 35 characters each
-        Do While Len(originalText) > 0
-            ' Check if the remaining text is less than or equal to 35 characters
-            If Len(originalText) <= 35 Then
-                ' If the remaining text fits within the current cell, set the value and exit the loop
-                cell.Value = originalText
-                Exit Do
-            Else
-                ' Split the text at 35 characters
-                newText = Left(originalText, 35)
-                originalText = Mid(originalText, 36)
-                ' Move to the next cell in the column
-                If ws.Cells(rowNum + 1, colNum).Value <> "" Then
-                    rowNum = rowNum + 1
-                    ws.Cells(rowNum, colNum).EntireRow.Insert
-                Else
-                    rowNum = rowNum + 1
-                End If
-                ' Set the value in the next cell
-                ws.Cells(rowNum, colNum).Value = newText
-            End If
-        Loop
-    Next cell
+    For z = ws.Range("A" & Rows.Count).End(xlUp).Row To 1 Step -1
+        txt = ws.Range("A" & z).Value
+        If Len(txt) > i Then
+            For x = 1 To Len(txt) Step i
+                ReDim Preserve var(y): var(y) = Mid(txt, x, i)
+                y = y + 1
+            Next x
+            ws.Rows(z).Delete
+            ws.Rows(z & ":" & z + UBound(var)).Insert
+            ws.Range("A" & z).Resize(UBound(var) + 1, 1) = Application.Transpose(var)
+            Erase var: y = 0
+        End If
+    Next z
 End Sub
